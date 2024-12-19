@@ -15,7 +15,11 @@
         pkgs = import nixpkgs {inherit system;};
       in {
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [godot_4 alejandra];
+          buildInputs = with pkgs; [godot_4 alejandra pkgs.stdenv.cc.cc.lib];
+          shellHook = ''
+            # Fix libstdc++ not found by git extension
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${pkgs.stdenv.cc.cc.lib}/lib
+          '';
         };
       }
     );
